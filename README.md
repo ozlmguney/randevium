@@ -1,46 +1,112 @@
-# Getting Started with Create React App
+🏥 Randevium - Klinik Randevu Yönetim Sistemi
+Bu proje, hem hastaların randevu alabileceği hem de yöneticilerin (admin) bu randevuları yönetebileceği tam kapsamlı bir web uygulamasıdır. Eğer bu projeyi ilk kez bilgisayarınıza kuracaksanız, aşağıdaki adımları sırasıyla takip etmeniz yeterlidir.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🛠 1. Hazırlık: Gerekli Programların Kurulması
+Projeyi çalıştırmadan önce bilgisayarınızda şu iki temel aracın kurulu olduğundan emin olun:
 
-## Available Scripts
+Node.js: Projenin motorudur. Node.js resmi web sitesinden "LTS" (Kararlı sürüm) olanı indirip kurun.
 
-In the project directory, you can run:
+Git: Kodları bilgisayarınıza indirmek için gereklidir. Git SCM sitesinden indirebilirsiniz.
 
-### `npm start`
+Kontrol Et: Terminalinizi (veya CMD) açın ve node -v yazın. Bir versiyon numarası (örn: v20.x.x) görüyorsanız hazırsınız demektir!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+📥 2. Projenin Bilgisayara İndirilmesi
+Terminali açın ve projeyi kaydetmek istediğiniz klasöre gidip şu komutu yazın:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Bash
+git clone https://github.com/ozlmguney/randevium.git
+cd randevium
+📦 3. Gerekli Paketlerin Yüklenmesi
+Bu proje birçok kütüphane (Material UI, Axios, React Router vb.) kullanmaktadır. Bunları tek tek yüklemekle uğraşmanıza gerek yok. Proje klasöründeyken terminale şunu yazmanız yeterli:
 
-### `npm test`
+Bash
+npm install
+Bu komut, package.json dosyasındaki tüm eksik paketleri (MUI, Icons, Emotion vb.) otomatik olarak bulur ve yükler.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+🚀 4. Uygulamayı Çalıştırma
+Proje iki kısımdan oluşur: Frontend (Arayüz) ve Backend (Sunucu). Uygulamanın tam çalışması için ikisinin de açık olması gerekir.
 
-### `npm run build`
+A) Backend (Sunucu) Çalıştırma
+Yeni bir terminal penceresi açın (Backend klasöründe olduğunuzdan emin olun):
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Bash
+node server.js
+Burada "Server 5001 portunda çalışıyor" yazısını görmelisiniz.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+B) Frontend (Arayüz) Çalıştırma
+Mevcut terminalinizde (Ana dizinde) uygulamayı başlatın:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Bash
+npm start
+Otomatik olarak tarayıcınızda http://localhost:3000 adresi açılacaktır.
 
-### `npm run eject`
+⚠️ Olası Hatalar ve Çözümleri
+1. "JavaScript heap out of memory" Hatası Alırsanız:
+Bilgisayarınızın RAM kapasitesi yetmediğinde bu hatayı alabilirsiniz. Çözmek için terminale şu komutu yazıp sonra tekrar npm start yapın:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+PowerShell
+$env:NODE_OPTIONS = "--max-old-space-size=4096"
+2. "Port 3000 is already in use" Hatası Alırsanız:
+Terminale y yazıp başka bir portta açılmasını onaylayın veya çalışan diğer terminal pencerelerini kapatın.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+🏗 Kullanılan Teknolojiler
+Frontend: React.js, Material UI (MUI), React Router
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Backend: Node.js, Express.js
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Veri Yönetimi: Axios (API istekleri için)
 
-## Learn More
+İkonlar: MUI Icons
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+👨‍💻 Admin Giriş Bilgileri (Varsayılan)
+admin@randevium.com admin123
+Eğer sistemi test etmek isterseniz admin paneline şu şekilde ulaşabilirsiniz:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Giriş Sayfası: /login
+
+Admin Paneli: /admin (Giriş yaptıktan sonra yönlendirilirsiniz)
+
+✨ Temel Özellikler (Features)
+🚀 Kullanıcılar İçin:
+
+Kolay Randevu Oluşturma: Doktor, tarih ve saat seçerek hızlıca randevu alabilme.
+
+Randevu Takibi: Alınan randevuların durumunu (Onaylı/Bekliyor) anlık görme.
+
+Detaylı İnceleme: Randevu detaylarına modal (açılır pencere) üzerinden erişim.
+
+🔐 Yöneticiler (Admin) İçin:
+
+Merkezi Yönetim: Tüm hastaların randevularını tek bir panelden görme.
+
+Onay Mekanizması: Bekleyen randevuları tek tıkla onaylama.
+
+Düzenleme & Silme: Hatalı randevuları güncelleme veya iptal etme.
+
+Akıllı Filtreleme: Doktor adına veya hasta ismine göre hızlı arama.
+
+🎨 Tasarım:
+<img width="1365" height="591" alt="Ekran görüntüsü 2026-03-03 000623" src="https://github.com/user-attachments/assets/c3e487b4-ebb4-4b06-831c-d059b474402e" />
+<img width="1345" height="594" alt="Ekran görüntüsü 2026-03-03 000600" src="https://github.com/user-attachments/assets/629ac46a-5ccf-4edd-995a-a2a9123ee981" />
+<img width="1342" height="593" alt="Ekran görüntüsü 2026-03-03 000714" src="https://github.com/user-attachments/assets/3c94ea46-33d8-44b9-8871-d1b16824475c" />
+<img width="1343" height="598" alt="Ekran görüntüsü 2026-03-03 000647" src="https://github.com/user-attachments/assets/5966a10c-b50d-45c4-bb9a-2753f8c8365b" />
+
+Glassmorphism: Modern cam efekti ve şık arka plan görselleri.
+
+Responsive Tasarım: Mobil telefon, tablet ve bilgisayarlarla tam uyumlu arayüz.
+
+MUI Entegrasyonu: Google'ın Material Design standartlarında kullanıcı deneyimi.
+
+🛠 Teknik Detaylar (İleri Seviye Kurulum)
+Eğer projeyi geliştirici olarak kullanacaksanız, şu detaylar işinize yarayacaktır:
+
+
+Frontend Portu: 3000
+
+Backend Portu: 5001
+
+API İstekleri: Axios kütüphanesi ile http://localhost:5001/api üzerinden haberleşir.
+
+Tema: ThemeProvider ile özelleştirilmiş MUI Dark/Light mod desteği.
+
+Geliştirici: Özlem Güney
