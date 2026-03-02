@@ -3,7 +3,7 @@ const cors = require('cors');
 const sendMail = require('./utils/mailer');
 const app = express();
 const jwt = require('jsonwebtoken'); 
-const SECRET_KEY = "randevium_gizli_anahtar_123"; 
+const SECRET_KEY = process.env.JWT_SECRET || 'fallback_key_for_local';
 app.use(cors());
 app.use(express.json());
 
@@ -207,7 +207,6 @@ app.delete('/api/appointments/:id', async (req, res) => {
     const { id } = req.params;
     console.log("Silme isteği geldi, ID:", id);
 
-    // Tip farkı (string/number) olmaması için her iki tarafı da String'e çeviriyoruz
     const index = appointments.findIndex(a => String(a.id) === String(id));
 
     if (index !== -1) {
@@ -216,7 +215,6 @@ app.delete('/api/appointments/:id', async (req, res) => {
 
         console.log("Randevu başarıyla silindi.");
 
-        // İptal maili gönder (Hata alsa bile silme işlemi tamamlanmış sayılır)
         if (deletedApp.userEmail) {
             sendMail(deletedApp.userEmail, "Randevunuz İptal Edildi", "Randevunuz başarıyla iptal edilmiştir.")
             .catch(err => console.log("Mail gönderilemedi:", err.message));
