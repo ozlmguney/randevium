@@ -41,7 +41,6 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({ open, onClose, onSu
     };
 
     try {
-        // Token'ı header'a ekledik
         await axios.post('http://localhost:5001/api/appointments', appointmentData, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });

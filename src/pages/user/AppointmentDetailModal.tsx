@@ -25,7 +25,6 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
   const [editedData, setEditedData] = useState({ ...appointment });
   const [doctors, setDoctors] = useState<any[]>([]);
 
-  // Token'ı almak için yardımcı fonksiyon
   const getAuthHeader = () => ({
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
   });
@@ -34,7 +33,6 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
     if (appointment) {
       setEditedData({ ...appointment });
     }
-    // Doktorları çekerken tam URL kullanıyoruz
     axios.get('http://localhost:5001/api/doctors')
       .then(res => setDoctors(res.data))
       .catch(() => {});
@@ -42,11 +40,9 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
 
   if (!appointment) return null;
 
-  // SİLME İŞLEMİ (DELETE)
   const handleDelete = async () => {
     if (window.confirm("Bu randevuyu tamamen silmek istediğinize emin misiniz?")) {
       try {
-        // Status güncellemek yerine gerçek DELETE atıyoruz
         await axios.delete(`http://localhost:5001/api/appointments/${appointment.id}`, getAuthHeader());
         alert("Randevu silindi.");
         onUpdate(); 

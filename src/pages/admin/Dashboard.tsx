@@ -42,14 +42,10 @@ const glassCardStyle = {
 const AdminDashboard = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, doctors: 0 });
-  
-  const [selectedApp, setSelectedApp] = useState<any>(null);
+  const [selectedAppt, setSelectedAppt] = useState<any>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  
   const [searchTerm, setSearchTerm] = useState('');
   const [doctorFilter, setDoctorFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState<any>(null); 
 
@@ -71,6 +67,16 @@ const AdminDashboard = () => {
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  const getDoctorName = (app: any) => {
+    if (app?.doctorName) return app.doctorName;
+    const ids: any = { 
+      "1": "Dr. Ahmet Yılmaz", 
+      "2": "Dr. Ayşe Demir", 
+      "3": "Dr. Mehmet Kaya" 
+    };
+    return ids[String(app?.doctorId)] || "Bilinmeyen Doktor"; 
+  };
 
   const handleUpdate = async () => {
     try {
@@ -107,11 +113,11 @@ const AdminDashboard = () => {
   };
 
   const filteredAppointments = appointments.filter((app) => {
-    const dName = (app.doctorName || "").toLowerCase();
+    const dName = (getDoctorName(app)).toLowerCase();
     const uName = (app.userName || "").toLowerCase();
     const search = searchTerm.toLowerCase();
     const matchesSearch = dName.includes(search) || uName.includes(search);
-    const matchesDoctor = doctorFilter === 'all' || app.doctorName === doctorFilter;
+    const matchesDoctor = doctorFilter === 'all' || getDoctorName(app) === doctorFilter;
     return matchesSearch && matchesDoctor;
   });
 
@@ -158,7 +164,10 @@ const AdminDashboard = () => {
           {filteredAppointments.map((app) => (
             <Paper 
               key={app.id} 
-              onClick={() => { setSelectedApp(app); setIsDetailOpen(true); }}
+              onClick={() => { 
+                setSelectedAppt(app); 
+                setIsDetailOpen(true); 
+              }}
               sx={{ 
                 p: 2, mb: 2, borderRadius: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 cursor: 'pointer', '&:hover': { transform: 'translateY(-2px)', boxShadow: 4 }
@@ -168,7 +177,9 @@ const AdminDashboard = () => {
                 <Avatar sx={{ bgcolor: '#6366f1' }}>{app.userName?.charAt(0)}</Avatar>
                 <Box>
                   <Typography fontWeight={700}>{app.userName}</Typography>
-                  <Typography variant="body2" color="textSecondary">{app.doctorName} | {app.date} - {app.time}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {getDoctorName(app)} | {app.date} - {app.time}
+                  </Typography>
                 </Box>
               </Box>
 
@@ -192,10 +203,10 @@ const AdminDashboard = () => {
           ))}
         </Box>
 
-        {selectedApp && (
+        {selectedAppt && (
           <AppointmentDetailModal 
             open={isDetailOpen}
-            appointment={selectedApp}
+            appointment={{ ...selectedAppt, doctorName: getDoctorName(selectedAppt) }}
             onClose={() => setIsDetailOpen(false)}
             onUpdate={fetchData}
             onOpenChat={() => alert("Admin chat özelliği yakında!")}
@@ -217,7 +228,6 @@ const AdminDashboard = () => {
             </Stack>
           </Box>
         </Modal>
-
       </Container>
     </Box>
   );

@@ -85,12 +85,10 @@ const UserDashboard: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatDoctor, setChatDoctor] = useState<any>(null);
 
-  // 1. Randevuları Getirme
   const fetchAppointments = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:5001/api/appointments'); 
       const allApps = Array.isArray(response.data) ? response.data : [];
-      // İptal edilmeyenleri filtrele
       const myApps = allApps.filter((app: any) => app.status !== 'CANCELLED');
       setAppointments(myApps);
     } catch (error: any) {
@@ -99,7 +97,6 @@ const UserDashboard: React.FC = () => {
     }
   }, []);
 
-  // 2. Randevu Silme/İptal Etme (Buraya taşındı, artık kapsam hatası vermez)
   const handleCancelAppointment = async (appointmentId: string) => {
     try {
       const token = localStorage.getItem('token');
@@ -107,10 +104,9 @@ const UserDashboard: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // UI'dan hemen kaldır
       setAppointments(prev => prev.filter(app => String(app.id) !== String(appointmentId)));
       alert("Randevu başarıyla iptal edildi.");
-      fetchAppointments(); // Listeyi tazele
+      fetchAppointments(); 
     } catch (error: any) {
       console.error("Silme hatası:", error);
       alert("İşlem başarısız: Yetkiniz olmayabilir veya randevu bulunamadı.");
