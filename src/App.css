@@ -1,38 +1,127 @@
-.App {
-  text-align: center;
+.react-calendar, 
+.react-calendar *, 
+.react-calendar *:before, 
+.react-calendar *:after {
+    border: none !important; 
+    outline: none !important;
+    background: none !important;
+    text-decoration: none !important;
+    box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.react-calendar {
+    width: 100% !important;
+    background: #ffffff !important;
+    font-family: 'Inter', sans-serif !important;
+    padding: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+button.react-calendar__tile {
+    background: transparent !important;
+    border: none !important;
+    height: 60px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+    border-radius: 16px !important;
+    margin: 2px 0 !important;
+    cursor: pointer;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.react-calendar__tile--active {
+    background: #4f46e5 !important; 
+    color: #ffffff !important;
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4) !important;
 }
 
-.App-link {
-  color: #61dafb;
+.react-calendar__tile--now {
+    background: #f5f3ff !important;
+    color: #4f46e5 !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.react-calendar__navigation {
+    display: flex !important;
+    margin-bottom: 20px !important;
+}
+
+.react-calendar__navigation button {
+    color: #1e293b !important;
+    font-weight: 800 !important;
+    font-size: 1.1rem !important;
+    min-width: 44px !important;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    color: #94a3b8 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase;
+}
+
+.appointment-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #4fd1c5;
+    border-radius: 50%;
+    margin-top: 4px;
+}
+
+.react-calendar__month-view__days__day {
+  border: none !important;
+}
+
+.react-calendar__month-view__days__day::before,
+.react-calendar__month-view__days__day::after {
+  display: none !important;
+}
+
+.react-calendar__month-view__weekdays {
+  border-bottom: none !important;
+}
+
+.react-calendar__month-view__days {
+  gap: 8px !important;
+}
+ 
+
+.appointment-dot {
+  height: 6px;
+  width: 6px;
+  background-color: #4f46e5; 
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 0 8px rgba(79, 70, 229, 0.4); 
+}
+
+.react-calendar__tile--active .appointment-dot {
+  background-color: #ffffff !important;
+  box-shadow: none;
+}
+
+.appointment-dot {
+  height: 8px !important;
+  width: 8px !important;
+  background-color: #ef4444 !important;
+  border-radius: 50% !important;
+  display: block !important;
+  margin: 2px auto 0 auto !important;
+}
+.appointment-dot {
+  width: 7px !important;
+  height: 7px !important;
+  background-color: #ff4d4f !important;
+  border-radius: 50% !important;
+  display: block !important;
+}
+.appointment-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #ef4444; 
+  border-radius: 50%;
+  margin: 2px auto 0;
+  display: block;
 }

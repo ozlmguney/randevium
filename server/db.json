@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin Panel",
+      "email": "admin@randevium.com",
+      "password": "admin123",
+      "role": "ADMIN"
+    },
+    {
+      "id": "88dc",
+      "name": "Özlem Güney",
+      "email": "g@gmail.com",
+      "password": "123456",
+      "role": "USER"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "7587",
+      "doctorId": "1",
+      "date": "2026-03-04",
+      "time": "11:28",
+      "description": "",
+      "isUrgent": false,
+      "userId": "88dc",
+      "userName": "Özlem Güney",
+      "status": "APPROVED",
+      "createdAt": "2026-03-02T08:27:14.824Z"
+    },
+    {
+      "id": "744e",
+      "doctorId": "1",
+      "date": "2026-03-03",
+      "time": "12:52",
+      "description": "",
+      "isUrgent": false,
+      "userName": "Özlem Güney",
+      "status": "CANCELLED",
+      "createdAt": "2026-03-02T09:51:20.827Z"
+    },
+    {
+      "id": "404c",
+      "doctorId": "1",
+      "date": "2026-03-17",
+      "time": "12:52",
+      "description": "e33e3",
+      "isUrgent": false,
+      "userName": "Özlem Güney",
+      "status": "APPROVED",
+      "createdAt": "2026-03-02T09:51:38.014Z"
+    }
+  ],
+  "doctors": [
+    {
+      "id": "1",
+      "name": "Dr. Ahmet Yılmaz",
+      "role": "DOCTOR",
+      "specialty": "Kardiyoloji"
+    },
+    {
+      "id": "2",
+      "name": "Dr. Ayşe Demir",
+      "role": "DOCTOR",
+      "specialty": "Nöroloji"
+    },
+    {
+      "id": "3",
+      "name": "Dr. Mehmet Kaya",
+      "role": "DOCTOR",
+      "specialty": "Dahiliye"
+    }
+  ],
+  "messages": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
