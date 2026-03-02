@@ -3,12 +3,23 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext'; 
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserDashboard from './pages/user/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem('token');
+  
+  if (!token && !isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 const AppContent = () => {
   const location = useLocation();
@@ -20,9 +31,26 @@ const AppContent = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<UserDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </>
   );
