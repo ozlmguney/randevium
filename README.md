@@ -1,8 +1,3 @@
-Gemini şunu dedi:
-Sıfırdan bir geliştiricinin projeni kendi bilgisayarında çalıştırabilmesi için hazırlayacağın README.md dosyası, projenin "kullanım kılavuzu"dur. Senin Randevium projen hem bir Frontend (React) hem de bir Backend (Node.js/Express) içerdiği için iki ayrı dizinde işlem yapılması gerekiyor.
-
-İşte projenin kök dizinine (root) yapıştırabileceğin kapsamlı ve profesyonel README.md içeriği:
-
 🏥 Randevium - Akıllı Randevu Yönetim Sistemi
 Randevium, hastaların doktorlardan kolayca randevu alabildiği, doktorlarla anlık sohbet edebildiği ve adminlerin tüm süreci yönetebildiği modern bir sağlık platformudur.
 
