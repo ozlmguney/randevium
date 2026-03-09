@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const sendMail = require('./utils/mailer');
+const sendMail = require('./utils/mailer'); 
 const app = express();
 const jwt = require('jsonwebtoken'); 
 const SECRET_KEY = process.env.JWT_SECRET || 'fallback_key_for_local';
+const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json());
 
@@ -227,8 +228,7 @@ app.delete('/api/appointments/:id', async (req, res) => {
     }
 });
 
-const PORT = 5001;
 app.listen(PORT, () => {
-    console.log(`🚀 Server http://localhost:${PORT} üzerinde çalışıyor`);
+    console.log(`🚀 Server ${PORT} üzerinde çalışıyor`);
     console.log(`📂 Mailer modülü yüklendi: ./src/utils/mailer`);
 });
