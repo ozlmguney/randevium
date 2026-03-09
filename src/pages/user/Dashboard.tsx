@@ -76,14 +76,14 @@ const calendarStyle = {
 };
 
 const UserDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedAppt, setSelectedAppt] = useState<any>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatDoctor, setChatDoctor] = useState<any>(null);
+  const [chatDoctor, setChatDoctor] = useState<any>(null); 
 
   const fetchAppointments = useCallback(async () => {
     try {
@@ -98,6 +98,8 @@ const UserDashboard: React.FC = () => {
   }, []);
 
   const handleCancelAppointment = async (appointmentId: string) => {
+    if(!window.confirm("Randevuyu iptal etmek istediğinize emin misiniz?")) return;
+    
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:5001/api/appointments/${appointmentId}`, {
@@ -106,6 +108,7 @@ const UserDashboard: React.FC = () => {
 
       setAppointments(prev => prev.filter(app => String(app.id) !== String(appointmentId)));
       alert("Randevu başarıyla iptal edildi.");
+      setIsDetailOpen(false); 
       fetchAppointments(); 
     } catch (error: any) {
       console.error("Silme hatası:", error);
@@ -140,8 +143,11 @@ const UserDashboard: React.FC = () => {
   return (
     <Box sx={pageContainerStyle}>
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Typography variant="h5" sx={{ color: 'white', mb: 4, fontWeight: 700 }}>
+          Hoş geldin, {user?.name || 'Kullanıcı'}
+        </Typography>
+
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
-          
           <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 35%' } }}>
             <Paper elevation={0} sx={{ p: 4, borderRadius: '32px', bgcolor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)' }}>
               <Box display="flex" alignItems="center" gap={1} mb={3}>
@@ -235,10 +241,21 @@ const UserDashboard: React.FC = () => {
             appointment={{ ...selectedAppt, doctorName: getDoctorName(selectedAppt) }}
             onClose={() => setIsDetailOpen(false)}
             onUpdate={fetchAppointments}
-            onOpenChat={(doctor) => { setChatDoctor(doctor); setIsChatOpen(true); }}
+            onCancel={() => handleCancelAppointment(selectedAppt.id)}
+            onOpenChat={(doctor: { id: string; name: string }) => { 
+            setChatDoctor(doctor); 
+            setIsChatOpen(true); 
+            }}          
           />
         )}
-        {isChatOpen && <ChatModal open={isChatOpen} onClose={() => setIsChatOpen(false)} />}
+        
+        {isChatOpen && (
+          <ChatModal 
+            open={isChatOpen} 
+            doctor={chatDoctor}
+            onClose={() => setIsChatOpen(false)} 
+          />
+        )}
       </Container>
     </Box>
   );

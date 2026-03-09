@@ -11,7 +11,6 @@ import {
   PersonAddAlt1, ArrowBack 
 } from '@mui/icons-material';
 import { registerSchema } from '../validations/authSchema';
-import { api } from '../services/api';
 import axios from 'axios';
 
 const backgroundImageUrl = 'https://images.unsplash.com/photo-1631248055158-edec7a3c072b?q=80&w=2000&auto=format&fit=crop';
@@ -65,23 +64,25 @@ const Register: React.FC = () => {
   const formik = useFormik({
     initialValues: { name: '', email: '', password: '', confirmPassword: '' },
     validationSchema: registerSchema,
-onSubmit: async (values) => {
-  try {
-    console.log("Butona basıldı, istek gönderiliyor...");
-    
-const response = await axios.post('http://localhost:5001/api/register', values);    
-console.log("Sunucudan gelen cevap:", response.data);
-    alert('Bağlantı Başarılı!');
-    navigate('/login');
-  } catch (error: any) {
-    console.error("HATA DETAYI:", error);
-    if (!error.response) {
-      alert("Sunucuya ulaşılamıyor. Terminalde 'Server 5000' yazısı açık mı?");
-    } else {
-      alert("Sunucu isteği reddetti: " + error.response.status);
+    onSubmit: async (values, { setSubmitting }) => {
+      setServerError(null);
+      try {
+        console.log("İstek gönderiliyor...");
+        const response = await axios.post('http://localhost:5001/api/register', values);    
+        console.log("Başarılı:", response.data);
+        alert('Kayıt Başarılı!');
+        navigate('/login');
+      } catch (error: any) {
+        console.error("HATA DETAYI:", error);
+        if (!error.response) {
+          setServerError("Sunucuya ulaşılamıyor. Lütfen backend'in çalıştığından emin olun.");
+        } else {
+          setServerError(error.response.data?.message || "Kayıt sırasında bir hata oluştu.");
+        }
+      } finally {
+        setSubmitting(false);
+      }
     }
-  }
-}
   });
 
   return (
@@ -108,7 +109,11 @@ console.log("Sunucudan gelen cevap:", response.data);
             </Typography>
           </Box>
 
-          {serverError && <Alert severity="error" sx={{ mb: 2, borderRadius: '12px' }}>{serverError}</Alert>}
+          {serverError && (
+            <Alert severity="error" sx={{ mb: 2, borderRadius: '12px' }}>
+              {serverError}
+            </Alert>
+          )}
 
           <form onSubmit={formik.handleSubmit}>
             <TextField
@@ -118,8 +123,10 @@ console.log("Sunucudan gelen cevap:", response.data);
               error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name && formik.errors.name}
               sx={inputStyle}
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Person color="action" /></InputAdornment>,
+              slotProps={{
+                input: {
+                  startAdornment: <InputAdornment position="start"><Person color="action" /></InputAdornment>,
+                },
               }}
             />
 
@@ -130,8 +137,10 @@ console.log("Sunucudan gelen cevap:", response.data);
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               sx={inputStyle}
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Email color="action" /></InputAdornment>,
+              slotProps={{
+                input: {
+                  startAdornment: <InputAdornment position="start"><Email color="action" /></InputAdornment>,
+                },
               }}
             />
 
@@ -143,15 +152,17 @@ console.log("Sunucudan gelen cevap:", response.data);
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
               sx={inputStyle}
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Lock color="action" /></InputAdornment>,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: <InputAdornment position="start"><Lock color="action" /></InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
 
@@ -168,7 +179,12 @@ console.log("Sunucudan gelen cevap:", response.data);
             <Button 
               type="submit" fullWidth variant="contained" 
               disabled={formik.isSubmitting}
-              sx={{ mt: 4, mb: 2, py: 1.6, borderRadius: '14px', textTransform: 'none', fontWeight: 700, fontSize: '16px', bgcolor: '#10b981', '&:hover': { bgcolor: '#059669' } }}
+              sx={{ 
+                mt: 4, mb: 2, py: 1.6, borderRadius: '14px', 
+                textTransform: 'none', fontWeight: 700, fontSize: '16px', 
+                bgcolor: '#10b981', 
+                '&:hover': { bgcolor: '#059669' } 
+              }}
             >
               {formik.isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Kayıt Ol'}
             </Button>

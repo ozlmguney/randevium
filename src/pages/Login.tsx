@@ -74,7 +74,7 @@ const Login: React.FC = () => {
           console.log("Yönetici girişi algılandı. Admin paneline aktarılıyor...");
           navigate('/admin');
         } else {
-          console.log("Kullanıcı girişi başarılı. Panale aktarılıyor...");
+          console.log("Kullanıcı girişi başarılı. Panele aktarılıyor...");
           navigate('/dashboard');
         }
       } catch (error: any) {
@@ -109,38 +109,61 @@ const Login: React.FC = () => {
 
           <form onSubmit={formik.handleSubmit}>
             <TextField
-              fullWidth margin="normal" name="email" label="E-posta Adresi"
-              value={formik.values.email} onChange={formik.handleChange}
+              fullWidth
+              margin="normal"
+              name="email"
+              label="E-posta Adresi"
+              value={formik.values.email}
+              onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               sx={inputStyle}
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Email color="action" /></InputAdornment>,
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Email color="action" />
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
+
             <TextField
-              fullWidth margin="normal" name="password" label="Şifre"
+              fullWidth
+              margin="normal"
+              name="password"
+              label="Şifre"
               type={showPassword ? 'text' : 'password'}
-              value={formik.values.password} onChange={formik.handleChange}
+              value={formik.values.password}
+              onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
               sx={inputStyle}
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Lock color="action" /></InputAdornment>,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
               }}
             />
 
             <Button 
-              type="submit" fullWidth variant="contained" 
+              type="submit" 
+              fullWidth 
+              variant="contained" 
               disabled={formik.isSubmitting} 
               sx={{ 
                 mt: 4, mb: 2, py: 1.6, borderRadius: '14px', 

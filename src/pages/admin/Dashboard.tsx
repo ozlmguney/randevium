@@ -89,8 +89,8 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleApprove = async (e: React.MouseEvent, id: string) => {
-    e.stopPropagation(); 
+  const handleApprove = async (e: React.MouseEvent | null, id: string) => {
+    e?.stopPropagation(); 
     try {
       await axios.put(`http://localhost:5001/api/appointments/${id}/approve`);
       alert("Randevu başarıyla onaylandı!");
@@ -100,11 +100,13 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
+  const handleDelete = async (e: React.MouseEvent | null, id: string) => {
+    e?.stopPropagation();
     if(window.confirm("Bu randevuyu silmek istediğinize emin misiniz?")) {
       try {
         await axios.delete(`http://localhost:5001/api/appointments/${id}`);
+        alert("Randevu silindi.");
+        setIsDetailOpen(false); // Detay modalı açıksa kapat
         fetchData(); 
       } catch (err) {
         console.error("Silme hatası:", err);
@@ -155,7 +157,13 @@ const AdminDashboard = () => {
                 <MenuItem value="Dr. Ayşe Demir">Dr. Ayşe Demir</MenuItem>
                 <MenuItem value="Dr. Mehmet Kaya">Dr. Mehmet Kaya</MenuItem>
             </TextField>
-            <TextField fullWidth placeholder="Hasta veya Doktor Ara..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} InputProps={{ startAdornment: <Search sx={{mr:1, color:'gray'}} /> }} />
+            <TextField 
+              fullWidth 
+              placeholder="Hasta veya Doktor Ara..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+              slotProps={{ input: { startAdornment: <Search sx={{mr:1, color:'gray'}} /> } }} 
+            />
           </Stack>
         </Paper>
 
@@ -210,6 +218,8 @@ const AdminDashboard = () => {
             onClose={() => setIsDetailOpen(false)}
             onUpdate={fetchData}
             onOpenChat={() => alert("Admin chat özelliği yakında!")}
+            // onCancel artık Dashboard'daki handleDelete'i tetikliyor
+            onCancel={() => handleDelete(null, selectedAppt.id)}
           />
         )}
 

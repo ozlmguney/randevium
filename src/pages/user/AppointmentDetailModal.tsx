@@ -7,19 +7,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ChatIcon from '@mui/icons-material/Chat';
-import { api } from '../../services/api';
-import axios from 'axios'; // Bu satırı ekle
+import axios from 'axios';
 
 interface AppointmentDetailModalProps {
   open: boolean;
   onClose: () => void;
   appointment: any;
   onUpdate: () => void; 
-  onOpenChat: (doctor: any) => void; 
+  onOpenChat: (doctor: { id: string; name: string }) => void;  
+  onCancel: () => void;
 }
 
 const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({ 
-  open, onClose, appointment, onUpdate, onOpenChat 
+  open, onClose, appointment, onUpdate, onOpenChat, onCancel
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({ ...appointment });
@@ -31,8 +31,10 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
 
   useEffect(() => {
     if (appointment) {
-      setEditedData({ ...appointment });
+      const formattedDate = appointment.date ? new Date(appointment.date).toISOString().split('T')[0] : '';
+      setEditedData({ ...appointment, date: formattedDate });
     }
+    
     axios.get('http://localhost:5001/api/doctors')
       .then(res => setDoctors(res.data))
       .catch(() => {});
@@ -40,18 +42,8 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
 
   if (!appointment) return null;
 
-  const handleDelete = async () => {
-    if (window.confirm("Bu randevuyu tamamen silmek istediğinize emin misiniz?")) {
-      try {
-        await axios.delete(`http://localhost:5001/api/appointments/${appointment.id}`, getAuthHeader());
-        alert("Randevu silindi.");
-        onUpdate(); 
-        onClose(); 
-      } catch (error) {
-        console.error("Silme hatası:", error);
-        alert("Silme işlemi başarısız oldu.");
-      }
-    }
+  const handleInternalCancel = () => {
+    onCancel(); 
   };
 
   const handleSave = async () => {
@@ -66,6 +58,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
       setIsEditing(false);
       onUpdate(); 
       alert("Başarıyla güncellendi!");
+      onClose(); 
     } catch (error: any) {
       alert("Güncelleme yapılamadı.");
     }
@@ -96,7 +89,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
               <Stack direction="row" spacing={2}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="caption" color="text.secondary">Tarih</Typography>
-                  <Typography variant="body2">{new Date(appointment.date).toLocaleDateString()}</Typography>
+                  <Typography variant="body2">{new Date(appointment.date).toLocaleDateString('tr-TR')}</Typography>
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="caption" color="text.secondary">Saat</Typography>
@@ -121,13 +114,15 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
               </TextField>
 
               <TextField 
-                label="Tarih" type="date" fullWidth size="small" InputLabelProps={{ shrink: true }}
+                label="Tarih" type="date" fullWidth size="small" 
+                slotProps={{ inputLabel: { shrink: true } }} 
                 value={editedData.date}
                 onChange={(e) => setEditedData({...editedData, date: e.target.value})}
               />
 
               <TextField 
-                label="Saat" type="time" fullWidth size="small" InputLabelProps={{ shrink: true }}
+                label="Saat" type="time" fullWidth size="small" 
+                slotProps={{ inputLabel: { shrink: true } }} 
                 value={editedData.time}
                 onChange={(e) => setEditedData({...editedData, time: e.target.value})}
               />
@@ -145,12 +140,18 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
           <Stack direction="row" spacing={1} justifyContent="center">
             {!isEditing ? (
               <>
-                <Button startIcon={<ChatIcon />} variant="outlined" fullWidth onClick={() => {
-                    onClose();
+                <Button 
+                  startIcon={<ChatIcon />} 
+                  variant="outlined" 
+                  fullWidth 
+                  onClick={() => {
                     onOpenChat({ id: appointment.doctorId, name: appointment.doctorName });
-                }}>Sohbet</Button>
+                  }}
+                >
+                  Sohbet
+                </Button>
                 <Button startIcon={<EditIcon />} variant="outlined" color="info" fullWidth onClick={() => setIsEditing(true)}>Düzenle</Button>
-                <Button startIcon={<DeleteIcon />} variant="outlined" color="error" fullWidth onClick={handleDelete}>İptal</Button>
+                <Button startIcon={<DeleteIcon />} variant="outlined" color="error" fullWidth onClick={handleInternalCancel}>İptal Et</Button>
               </>
             ) : (
               <>
