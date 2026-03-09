@@ -3,9 +3,11 @@ const cors = require('cors');
 const sendMail = require('./utils/mailer'); 
 const app = express();
 const jwt = require('jsonwebtoken'); 
+
 const SECRET_KEY = process.env.JWT_SECRET || 'fallback_key_for_local';
 const PORT = process.env.PORT || 5001;
-app.use(cors());
+
+app.use(cors({ origin: "*" })); 
 app.use(express.json());
 
 let appointments = [];
@@ -19,135 +21,93 @@ let users = [
     }
 ];
 let messages = [];
-app.get('/api/messages', (req, res) => res.json(messages));
-app.post('/api/messages', (req, res) => {
-    messages.push(req.body);
-    res.status(201).json(req.body);
-});
-
 
 app.use((req, res, next) => {
     console.log(`${req.method} isteği geldi: ${req.url}`);
     next();
 });
 
+app.get('/', (req, res) => res.send("Randevium API Yayında! 🚀"));
+app.get('/api/test', (req, res) => res.json({ message: "Backend bağlantısı başarılı!" }));
+
+app.get('/api/messages', (req, res) => res.json(messages));
+app.post('/api/messages', (req, res) => {
+    messages.push(req.body);
+    res.status(201).json(req.body);
+});
+
 const doctors = [
-  { 
-    id: "1", 
-    name: "Dr. Ahmet Yılmaz", 
-    specialty: "Kardiyoloji",
-    avatarUrl: "https://i.pravatar.cc/150?img=11", 
-    isOnline: true
-  },
-  { 
-    id: "2", 
-    name: "Dr. Ayşe Demir", 
-    specialty: "Nöroloji",
-    avatarUrl: "https://i.pravatar.cc/150?img=26",
-    isOnline: true
-  },
-  { 
-  id: "3", 
-  name: "Dr. Mehmet Kaya", 
-  specialty: "Dahiliye",
-  avatarUrl: "https://i.pravatar.cc/150?img=12", 
-  isOnline: false 
-}
+    { id: "1", name: "Dr. Ahmet Yılmaz", specialty: "Kardiyoloji", avatarUrl: "https://i.pravatar.cc/150?img=11", isOnline: true },
+    { id: "2", name: "Dr. Ayşe Demir", specialty: "Nöroloji", avatarUrl: "https://i.pravatar.cc/150?img=26", isOnline: true },
+    { id: "3", name: "Dr. Mehmet Kaya", specialty: "Dahiliye", avatarUrl: "https://i.pravatar.cc/150?img=12", isOnline: false }
 ];
 
-app.get('/api/doctors', (req, res) => {
-    console.log("Doktor listesi istendi");
-    res.json(doctors);
-});
+app.get('/api/doctors', (req, res) => res.json(doctors));
 
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    console.log("JWT Giriş denemesi:", email);
+    console.log("Giriş denemesi:", email);
 
-    let foundUser = null;
+    let foundUser = users.find(u => u.email === email && u.password === password);
 
-    if (email === "admin@randevium.com" && password === "admin") {
-        foundUser = { id: "admin-1", name: "Yönetici", email: email, role: "ADMIN" };
-    } else {
-        foundUser = users.find(u => u.email === email && u.password === password);
+    if (!foundUser && email === "admin@randevium.com" && password === "admin123") {
+        foundUser = users[0];
     }
 
     if (foundUser) {
         const token = jwt.sign(
-            { 
-                id: foundUser.id, 
-                email: foundUser.email, 
-                role: foundUser.role || 'USER' 
-            }, 
+            { id: foundUser.id, email: foundUser.email, role: foundUser.role || 'USER' }, 
             SECRET_KEY, 
             { expiresIn: '24h' } 
         );
-
-        console.log(`${foundUser.role} girişi başarılı, Token üretildi.`);
-
         return res.status(200).json({ 
             message: "Giriş başarılı", 
-            user: { 
-                id: foundUser.id, 
-                name: foundUser.name, 
-                email: foundUser.email, 
-                role: foundUser.role || 'USER' 
-            },
-            token: token 
+            user: { id: foundUser.id, name: foundUser.name, email: foundUser.email, role: foundUser.role || 'USER' },
+            token 
         });
-    } else {
-        return res.status(401).json({ message: "E-posta veya şifre hatalı!" });
     }
+    return res.status(401).json({ message: "E-posta veya şifre hatalı!" });
 });
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', (req, res) => {
     try {
         const userData = { ...req.body, id: Date.now().toString(), role: 'USER' };
         users.push(userData); 
-        console.log("Yeni kullanıcı kayıt oldu:", userData.email);
+        console.log("Yeni kullanıcı eklendi:", userData.email);
 
-        sendMail(userData.email, "Hoş Geldiniz!", "Kaydınız tamamlandı.")
-            .catch(err => console.log("Mail gönderilemedi (Zaman aşımı), sorun değil."));
+        if (userData.email) {
+            sendMail(userData.email, "Hoş Geldiniz!", `Sayın ${userData.name}, kaydınız başarıyla tamamlandı.`)
+                .then(() => console.log("Hoş geldin maili başarıyla gönderildi."))
+                .catch(err => console.log("Mail gönderiminde hata (Kayıt etkilenmedi):", err.message));
+        }
 
         return res.status(201).json({ message: "Kayıt başarılı", user: userData });
         
     } catch (error) {
-        console.error("Kayıt ana hatası:", error);
+        console.error("Kayıt hatası:", error);
         res.status(500).json({ message: "Sunucu hatası oluştu" });
     }
 });
 
-app.get('/api/appointments', (req, res) => {
-    res.json(appointments);
-});
+
+app.get('/api/appointments', (req, res) => res.json(appointments));
 
 app.post('/api/appointments', async (req, res) => {
     try {
-        const newApp = { 
-            ...req.body, 
-            id: req.body.id || Date.now().toString(), 
-            status: 'PENDING' 
-        };
-        
+        const newApp = { ...req.body, id: Date.now().toString(), status: 'PENDING' };
         appointments.push(newApp);
-        console.log("Yeni randevu eklendi:", newApp);
-
+        
         if (newApp.userEmail) {
-            await sendMail(
-                newApp.userEmail,
-                "Randevu Talebiniz Alındı",
-                `Sayın kullanıcımız, ${newApp.date} tarihindeki randevunuz başarıyla oluşturulmuştur.`
-            );
-            console.log("Onay maili gönderildi.");
+            sendMail(newApp.userEmail, "Randevu Talebiniz Alındı", `Randevunuz oluşturuldu. Tarih: ${newApp.date}`)
+                .catch(err => console.log("Randevu maili hatası:", err.message));
         }
-
         res.status(201).json(newApp);
     } catch (error) {
-        console.error("Post hatası:", error);
-        res.status(500).json({ message: "Sunucu hatası oluştu" });
+        res.status(500).json({ message: "Sunucu hatası" });
     }
 });
+
 app.put('/api/appointments/:id/approve', async (req, res) => {
     const { id } = req.params;
     const index = appointments.findIndex(a => String(a.id) === String(id));
@@ -155,76 +115,33 @@ app.put('/api/appointments/:id/approve', async (req, res) => {
     if (index !== -1) {
         appointments[index].status = 'APPROVED';
         const approvedApp = appointments[index];
-
-        console.log(`Randevu onaylandı: ${id}`);
-
+        
         if (approvedApp.userEmail) {
-            try {
-                await sendMail(
-                    approvedApp.userEmail,
-                    "Randevunuz Onaylandı!",
-                    `Sayın kullanıcımız, ${approvedApp.date} tarihindeki randevu talebiniz doktorumuz tarafından onaylanmıştır.`
-                );
-                console.log("Onay maili iletildi.");
-            } catch (mailError) {
-                console.error("Mail gönderme hatası:", mailError);
-            }
+            sendMail(approvedApp.userEmail, "Randevunuz Onaylandı!", "Randevu talebiniz onaylanmıştır.")
+                .catch(err => console.log("Onay maili hatası:", err.message));
         }
-
         return res.status(200).json(approvedApp);
     }
-
-    res.status(404).json({ message: "Randevu bulunamadı" });
-});
-app.put('/api/appointments/:id', async (req, res) => {
-    const { id } = req.params;
-    const index = appointments.findIndex(a => String(a.id) === String(id));
-    
-    if (index !== -1) {
-        appointments[index] = { ...appointments[index], ...req.body };
-        const updated = appointments[index];
-
-        console.log(`Randevu güncellendi: ${id}`);
-
-        if (updated.userEmail) {
-            try {
-                await sendMail(
-                    updated.userEmail,
-                    "Randevu Bilgileriniz Güncellendi",
-                    `Randevunuz yeni bilgilerle güncellenmiştir. Tarih: ${updated.date}, Saat: ${updated.time}`
-                );
-            } catch (err) { console.error("Güncelleme maili hatası:", err); }
-        }
-        return res.status(200).json(updated);
-    }
     res.status(404).json({ message: "Randevu bulunamadı" });
 });
 
-app.delete('/api/appointments/:id', async (req, res) => {
+app.delete('/api/appointments/:id', (req, res) => {
     const { id } = req.params;
-    console.log("Silme isteği geldi, ID:", id);
-
     const index = appointments.findIndex(a => String(a.id) === String(id));
 
     if (index !== -1) {
-        const deletedApp = appointments[index];
+        const deleted = appointments[index];
         appointments = appointments.filter(a => String(a.id) !== String(id));
-
-        console.log("Randevu başarıyla silindi.");
-
-        if (deletedApp.userEmail) {
-            sendMail(deletedApp.userEmail, "Randevunuz İptal Edildi", "Randevunuz başarıyla iptal edilmiştir.")
-            .catch(err => console.log("Mail gönderilemedi:", err.message));
+        
+        if (deleted.userEmail) {
+            sendMail(deleted.userEmail, "Randevunuz İptal Edildi", "Randevunuz başarıyla iptal edilmiştir.")
+                .catch(err => console.log("İptal maili hatası."));
         }
-
-        return res.status(200).json({ message: "Silindi", id: id });
-    } else {
-        console.log("Hata: Randevu bulunamadı, mevcut randevular:", appointments.map(a => a.id));
-        return res.status(404).json({ message: "Randevu bulunamadı!" });
+        return res.status(200).json({ message: "Silindi", id });
     }
+    res.status(404).json({ message: "Randevu bulunamadı!" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server ${PORT} üzerinde çalışıyor`);
-    console.log(`📂 Mailer modülü yüklendi: ./src/utils/mailer`);
 });
