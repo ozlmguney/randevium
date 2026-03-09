@@ -60,6 +60,10 @@ app.get('/api/doctors', (req, res) => {
     res.json(doctors);
 });
 
+app.get('/api/test', (req, res) => {
+    res.json({ message: "Backend'e ulaşıldı, her şey yolunda!" });
+});
+
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
     console.log("JWT Giriş denemesi:", email);
