@@ -103,25 +103,18 @@ app.post('/api/login', (req, res) => {
 
 app.post('/api/register', async (req, res) => {
     try {
-        const userData = { ...req.body, role: 'USER' };
+        const userData = { ...req.body, id: Date.now().toString(), role: 'USER' };
         users.push(userData); 
-        
-        try {
-            if (userData.email) {
-                await sendMail(
-                    userData.email,
-                    "Hoş Geldiniz!",
-                    `Sayın ${userData.name || 'Kullanıcı'}, kaydınız tamamlanmıştır.`
-                );
-            }
-        } catch (mailErr) {
-            console.error("Mail gönderme atlandı (Hata):", mailErr.message);
-        }
+        console.log("Yeni kullanıcı kayıt oldu:", userData.email);
 
-        res.status(201).json({ message: "Kayıt başarılı", user: userData });
+        sendMail(userData.email, "Hoş Geldiniz!", "Kaydınız tamamlandı.")
+            .catch(err => console.log("Mail gönderilemedi (Zaman aşımı), sorun değil."));
+
+        return res.status(201).json({ message: "Kayıt başarılı", user: userData });
+        
     } catch (error) {
-        console.error("Genel Kayıt hatası:", error);
-        res.status(500).json({ message: "Kayıt sırasında hata oluştu" });
+        console.error("Kayıt ana hatası:", error);
+        res.status(500).json({ message: "Sunucu hatası oluştu" });
     }
 });
 
