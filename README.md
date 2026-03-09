@@ -1,58 +1,50 @@
 🏥 Randevium - Akıllı Randevu Yönetim Sistemi
 Randevium, hastaların doktorlardan kolayca randevu alabildiği, doktorlarla anlık sohbet edebildiği ve adminlerin tüm süreci yönetebildiği modern bir sağlık platformudur.
 
+🛠️ Ön Koşullar (Kurulumdan Önce Kontrol Edin)
+Projeyi sorunsuz çalıştırmak için bilgisayarınızda şu ayarların yapılmış olması gerekir:
+
+Node.js Kurulu mu?: Bilgisayarınızda Node.js (v18 veya üstü önerilir) kurulu olmalıdır.
+
+Kontrol etmek için terminale node -v yazın. Eğer yüklü değilse nodejs.org adresinden indirin.
+
+PowerShell Yetki Hatası (Windows): Terminalde npm install veya npm run dev yazınca kırmızı hata alıyorsanız, PowerShell script çalıştırma yetkiniz kapalı olabilir.
+
+Çözüm: PowerShell'i Yönetici olarak açın ve şu komutu çalıştırın:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Bu komut, yerel bilgisayarınızda yazdığınız kodların çalışmasına izin verecektir.
+
 🚀 Başlangıç (Kurulum Rehberi)
-Bu projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları sırasıyla takip edin. Not: Bilgisayarınızda Node.js kurulu olmalıdır.
-
 1. Projeyi Klonlayın
-Önce projeyi GitHub'dan bilgisayarınıza indirin:
-
 Bash
 git clone https://github.com/ozlmguney/randevium.git
 cd randevium
+
 2. Backend (Sunucu) Kurulumu
-Backend tarafı randevuları ve kullanıcı verilerini yönetir. Birinci Terminali açın:
-
-Backend dizinine girin:
-
-Bash
+Birinci Terminali açın:
 cd backend
-Gerekli paketleri indirin:
-
-Bash
-npm install
+npm install (Eğer burada hata alırsanız yukarıda bulunan 🛠️ Ön Koşullar (Kurulumdan Önce Kontrol Edin) maddesine bakın)
 Sunucuyu başlatın:
-
-Bash
-npm start
+cd backend
+node server.js
 Sunucu şu adreste çalışacaktır: http://localhost:5001
 
 3. Frontend (Arayüz) Kurulumu
-Frontend tarafı kullanıcı arayüzünü (React) içerir. İkinci bir Terminal açın:
-
-Frontend (ana) dizine gidin: (Eğer backend içindeyseniz cd .. yapın)
-
+İkinci bir Terminal açın: (ana dizine dönmeyi unutmayın)
+Kütüphaneleri yükleyin: (Sadece ilk kurulumda bir kez yapılır)
 Bash
 npm install
 Uygulamayı başlatın:
+npm start
+Uygulama şu adreste açılacaktır: http://localhost:5173
 
-Bash
-npm run dev
-Uygulama şu adreste açılacaktır: http://localhost:5173 (Vite varsayılanı)
-
-📦 Admin Kullanıcı:
-admin@randevium.com  admin123
-
-🛠 Temel Özellikler
-Kullanıcı Paneli: Takvim üzerinden tarih seçimi ve randevu oluşturma.
-
-Admin Paneli: Randevu onaylama, düzenleme ve silme işlemleri.
-
-Detay Modalı: Randevu detaylarını görüntüleme ve hızlı aksiyon alma (İptal/Sohbet).
-
-Responsive Tasarım: Mobil ve masaüstü cihazlarla tam uyumlu arayüz.
+🔐 Giriş Bilgileri
+Admin: admin@randevium.com | Şifre: admin123
 
 ⚠️ Önemli Notlar
-Uygulamanın tam performanslı çalışması için iki terminalin de aynı anda açık ve çalışıyor olması gerekir.
+Terminal Yönetimi: Uygulamanın çalışması için backend terminalinde node server.js, frontend terminalinde ise npm start komutlarının aynı anda aktif olması gerekir.
 
-Eğer 5001 veya 5173 portları bilgisayarınızda kullanımda ise, .env dosyasından veya port ayarlarından değişiklik yapmanız gerekebilir.
+Bash
+npm install
+npm run dev
+Uygulama şu adreste açılacaktır: http://localhost:5173
