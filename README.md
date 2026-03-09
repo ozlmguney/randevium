@@ -40,13 +40,9 @@ Bash
 npm run dev
 Uygulama şu adreste açılacaktır: http://localhost:5173 (Vite varsayılanı)
 
-📦 Kullanılan Teknolojiler
-Alan	Teknoloji
-Frontend	React, TypeScript, Material UI (MUI), Vite
-Backend	Node.js, Express.js
-State/Auth	React Context API, JWT
-API	Axios
-Tasarım	Glassmorphism, Modern Minimalist UI
+📦 Admin Kullanıcı:
+admin@randevium.com  admin123
+
 🛠 Temel Özellikler
 Kullanıcı Paneli: Takvim üzerinden tarih seçimi ve randevu oluşturma.
 
