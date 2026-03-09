@@ -24,7 +24,7 @@ npm install
 Sunucuyu başlatın:
 
 Bash
-npm run dev
+npm start
 Sunucu şu adreste çalışacaktır: http://localhost:5001
 
 3. Frontend (Arayüz) Kurulumu
