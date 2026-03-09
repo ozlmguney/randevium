@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+Gemini şunu dedi:
+Sıfırdan bir geliştiricinin projeni kendi bilgisayarında çalıştırabilmesi için hazırlayacağın README.md dosyası, projenin "kullanım kılavuzu"dur. Senin Randevium projen hem bir Frontend (React) hem de bir Backend (Node.js/Express) içerdiği için iki ayrı dizinde işlem yapılması gerekiyor.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+İşte projenin kök dizinine (root) yapıştırabileceğin kapsamlı ve profesyonel README.md içeriği:
 
-## Available Scripts
+🏥 Randevium - Akıllı Randevu Yönetim Sistemi
+Randevium, hastaların doktorlardan kolayca randevu alabildiği, doktorlarla anlık sohbet edebildiği ve adminlerin tüm süreci yönetebildiği modern bir sağlık platformudur.
 
-In the project directory, you can run:
+🚀 Başlangıç (Kurulum Rehberi)
+Bu projeyi yerel bilgisayarınızda çalıştırmak için aşağıdaki adımları sırasıyla takip edin. Not: Bilgisayarınızda Node.js kurulu olmalıdır.
 
-### `npm start`
+1. Projeyi Klonlayın
+Önce projeyi GitHub'dan bilgisayarınıza indirin:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Bash
+git clone https://github.com/ozlmguney/randevium.git
+cd randevium
+2. Backend (Sunucu) Kurulumu
+Backend tarafı randevuları ve kullanıcı verilerini yönetir. Birinci Terminali açın:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Backend dizinine girin:
 
-### `npm test`
+Bash
+cd backend
+Gerekli paketleri indirin:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Bash
+npm install
+Sunucuyu başlatın:
 
-### `npm run build`
+Bash
+npm run dev
+Sunucu şu adreste çalışacaktır: http://localhost:5001
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Frontend (Arayüz) Kurulumu
+Frontend tarafı kullanıcı arayüzünü (React) içerir. İkinci bir Terminal açın:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Frontend (ana) dizine gidin: (Eğer backend içindeyseniz cd .. yapın)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Bash
+npm install
+Uygulamayı başlatın:
 
-### `npm run eject`
+Bash
+npm run dev
+Uygulama şu adreste açılacaktır: http://localhost:5173 (Vite varsayılanı)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+📦 Kullanılan Teknolojiler
+Alan	Teknoloji
+Frontend	React, TypeScript, Material UI (MUI), Vite
+Backend	Node.js, Express.js
+State/Auth	React Context API, JWT
+API	Axios
+Tasarım	Glassmorphism, Modern Minimalist UI
+🛠 Temel Özellikler
+Kullanıcı Paneli: Takvim üzerinden tarih seçimi ve randevu oluşturma.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Admin Paneli: Randevu onaylama, düzenleme ve silme işlemleri.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Detay Modalı: Randevu detaylarını görüntüleme ve hızlı aksiyon alma (İptal/Sohbet).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Responsive Tasarım: Mobil ve masaüstü cihazlarla tam uyumlu arayüz.
 
-## Learn More
+⚠️ Önemli Notlar
+Uygulamanın tam performanslı çalışması için iki terminalin de aynı anda açık ve çalışıyor olması gerekir.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Eğer 5001 veya 5173 portları bilgisayarınızda kullanımda ise, .env dosyasından veya port ayarlarından değişiklik yapmanız gerekebilir.
