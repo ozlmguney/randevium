@@ -105,19 +105,21 @@ app.post('/api/register', async (req, res) => {
         const userData = { ...req.body, role: 'USER' };
         users.push(userData); 
         
-        console.log("Yeni kullanıcı kayıt oldu:", userData.email);
-
-        if (userData.email) {
-            await sendMail(
-                userData.email,
-                "Hoş Geldiniz!",
-                `Sayın ${userData.name || 'Kullanıcı'}, sisteme kaydınız başarıyla tamamlanmıştır.`
-            );
+        try {
+            if (userData.email) {
+                await sendMail(
+                    userData.email,
+                    "Hoş Geldiniz!",
+                    `Sayın ${userData.name || 'Kullanıcı'}, kaydınız tamamlanmıştır.`
+                );
+            }
+        } catch (mailErr) {
+            console.error("Mail gönderme atlandı (Hata):", mailErr.message);
         }
 
         res.status(201).json({ message: "Kayıt başarılı", user: userData });
     } catch (error) {
-        console.error("Kayıt hatası:", error);
+        console.error("Genel Kayıt hatası:", error);
         res.status(500).json({ message: "Kayıt sırasında hata oluştu" });
     }
 });
