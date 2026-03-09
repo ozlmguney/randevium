@@ -68,7 +68,7 @@ const Register: React.FC = () => {
       setServerError(null);
       try {
         console.log("İstek gönderiliyor...");
-        const response = await axios.post('http://localhost:5001/api/register', values);    
+        const response = await axios.post('https://randevium-backend.onrender.com/api/register', values);    
         console.log("Başarılı:", response.data);
         alert('Kayıt Başarılı!');
         navigate('/login');

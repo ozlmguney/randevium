@@ -51,7 +51,7 @@ const AdminDashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/appointments');
+      const response = await axios.get('https://randevium-backend.onrender.com/api/appointments');
       if (Array.isArray(response.data)) {
         setAppointments(response.data);
         setStats({
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://localhost:5001/api/appointments/${editData.id}`, editData);
+      await axios.put(`https://randevium-backend.onrender.com/api/appointments/${editData.id}`, editData);
       alert("Randevu başarıyla güncellendi!");
       setIsEditModalOpen(false);
       fetchData(); 
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
   const handleApprove = async (e: React.MouseEvent | null, id: string) => {
     e?.stopPropagation(); 
     try {
-      await axios.put(`http://localhost:5001/api/appointments/${id}/approve`);
+      await axios.put(`https://randevium-backend.onrender.com/api/appointments/${id}/approve`);
       alert("Randevu başarıyla onaylandı!");
       fetchData(); 
     } catch (err) {
@@ -104,9 +104,9 @@ const AdminDashboard = () => {
     e?.stopPropagation();
     if(window.confirm("Bu randevuyu silmek istediğinize emin misiniz?")) {
       try {
-        await axios.delete(`http://localhost:5001/api/appointments/${id}`);
+        await axios.delete(`https://randevium-backend.onrender.com/api/appointments/${id}`);
         alert("Randevu silindi.");
-        setIsDetailOpen(false); // Detay modalı açıksa kapat
+        setIsDetailOpen(false);
         fetchData(); 
       } catch (err) {
         console.error("Silme hatası:", err);
@@ -218,7 +218,6 @@ const AdminDashboard = () => {
             onClose={() => setIsDetailOpen(false)}
             onUpdate={fetchData}
             onOpenChat={() => alert("Admin chat özelliği yakında!")}
-            // onCancel artık Dashboard'daki handleDelete'i tetikliyor
             onCancel={() => handleDelete(null, selectedAppt.id)}
           />
         )}

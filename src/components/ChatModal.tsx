@@ -18,7 +18,7 @@ const ChatModal = ({ open, onClose }: any) => {
 
   useEffect(() => {
     if (open) {
-      axios.get('http://localhost:5001/api/doctors').then(res => setDoctors(res.data));
+      axios.get('https://randevium-backend.onrender.com/api/doctors').then(res => setDoctors(res.data));
     }
   }, [open]);
 
@@ -36,7 +36,7 @@ const ChatModal = ({ open, onClose }: any) => {
 
   const fetchSpecificMessages = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/messages');
+      const res = await axios.get('https://randevium-backend.onrender.com/api/messages');
       const filteredMessages = res.data.filter((m: any) => 
         String(m.userId) === String(user?.id) && 
         String(m.doctorId) === String(selectedDoctor?.id)
@@ -60,7 +60,7 @@ const ChatModal = ({ open, onClose }: any) => {
     };
 
     try {
-      await axios.post('http://localhost:5001/api/messages', userMsg);
+      await axios.post('https://randevium-backend.onrender.com/api/messages', userMsg);
       setMessage('');
       fetchSpecificMessages();
 
@@ -73,7 +73,7 @@ const ChatModal = ({ open, onClose }: any) => {
           sender: 'doctor',
           timestamp: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
         };
-        await axios.post('http://localhost:5001/api/messages', botMsg);
+        await axios.post('https://randevium-backend.onrender.com/api/messages', botMsg);
         setIsTyping(false);
         fetchSpecificMessages();
       }, 2500);

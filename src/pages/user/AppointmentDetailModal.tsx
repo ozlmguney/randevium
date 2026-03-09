@@ -35,7 +35,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
       setEditedData({ ...appointment, date: formattedDate });
     }
     
-    axios.get('http://localhost:5001/api/doctors')
+    axios.get('https://randevium-backend.onrender.com/api/doctors')
       .then(res => setDoctors(res.data))
       .catch(() => {});
   }, [appointment, open]);
@@ -53,7 +53,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
         doctorName: doctors.find(d => String(d.id) === String(editedData.doctorId))?.name,
       };
 
-      await axios.put(`http://localhost:5001/api/appointments/${appointment.id}`, updatePayload, getAuthHeader()); 
+      await axios.put(`https://randevium-backend.onrender.com/api/appointments/${appointment.id}`, updatePayload, getAuthHeader()); 
       
       setIsEditing(false);
       onUpdate(); 

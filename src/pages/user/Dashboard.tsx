@@ -87,7 +87,7 @@ const UserDashboard: React.FC = () => {
 
   const fetchAppointments = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/appointments'); 
+      const response = await axios.get('https://randevium-backend.onrender.com/api/appointments'); 
       const allApps = Array.isArray(response.data) ? response.data : [];
       const myApps = allApps.filter((app: any) => app.status !== 'CANCELLED');
       setAppointments(myApps);
@@ -102,7 +102,7 @@ const UserDashboard: React.FC = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5001/api/appointments/${appointmentId}`, {
+      await axios.delete(`https://randevium-backend.onrender.com/api/appointments/${appointmentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
