@@ -22,7 +22,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({ open, onClose, onSu
 
   useEffect(() => {
     if (open) {
-      axios.get('https://randevium-backend.onrender.com/api/doctors')
+      axios.get('http://localhost:5001/api/doctors')
         .then(res => setDoctors(res.data))
         .catch(() => {
            console.log("Doktorlar yüklenemedi.");
@@ -41,7 +41,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({ open, onClose, onSu
     };
 
     try {
-        await axios.post('https://randevium-backend.onrender.com/api/appointments', appointmentData, {
+        await axios.post('http://localhost:5001/api/appointments', appointmentData, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         

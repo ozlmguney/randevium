@@ -69,7 +69,7 @@ const Register: React.FC = () => {
       try {
         console.log("İstek gönderiliyor...");
         const response = await axios.post(
-  'https://randevium-backend.onrender.com/api/register', 
+  'http://localhost:5001/api/register', 
   values,
   { timeout: 10000 } 
 );    

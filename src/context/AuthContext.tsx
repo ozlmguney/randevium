@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<User> => {
     try {
-      const res = await axios.post('https://randevium-backend.onrender.com/api/login', { email, password });
+      const res = await axios.post('http://localhost:5001/api/login', { email, password });
       const { user: userData, token } = res.data;
 
       localStorage.setItem('token', token); 

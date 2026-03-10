@@ -1,37 +1,31 @@
-const axios = require('axios');
+const nodemailer = require('nodemailer');
 
-const sendMail = async (to, subject, text) => {
-  const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
-  
-  try {
-    const response = await axios.post(
-      BREVO_API_URL,
-      {
-        sender: { name: "Klinik Yönetimi", email: "ozleemguney925@gmail.com" },
-        to: [{ email: to }],
-        subject: subject,
-        htmlContent: `
-          <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-            <h2 style="color: #10b981;">Randevium'a Hoş Geldiniz!</h2>
-            <p>${text}</p>
-            <footer style="margin-top: 20px; font-size: 12px; color: #888;">Bu bir API üzerinden gönderilen onay mailidir.</footer>
-          </div>
-        `
-      },
-      {
-        headers: {
-          'api-key': process.env.BREVO_API_KEY, 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }
-    );
-    console.log("API üzerinden mail başarıyla kuyruğa alındı:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Brevo API Hatası:", error.response ? error.response.data : error.message);
-    throw error;
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'ozleemguney925@gmail.com', 
+    pass: 'dhgw eezb tgwe pdbo' 
   }
+});
+
+const sendWelcomeEmail = async (email, name) => {
+  const mailOptions = {
+    from: '"Klinik Yönetimi" <senin-email-adresin@gmail.com>',
+    to: email,
+    subject: 'Aramıza Hoş Geldiniz!',
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <h1 style="color: #10b981;">Merhaba ${name}!</h1>
+        <p>Klinik randevu sistemimize başarıyla kayıt oldunuz.</p>
+        <p>Artık randevularınızı kolayca yönetebilirsiniz.</p>
+        <br>
+        <hr>
+        <footer style="font-size: 0.8em; color: #777;">Bu bir otomatik bilgilendirme mailidir.</footer>
+      </div>
+    `
+  };
+
+  return transporter.sendMail(mailOptions);
 };
 
-module.exports = sendMail;
+module.exports = { sendWelcomeEmail };
