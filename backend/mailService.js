@@ -2,12 +2,15 @@ const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.brevo.com',
-  port: 587,
+  port: 2525, 
   secure: false, 
   auth: {
-    user: 'a47cfb001@smtp-brevo.com', 
-    pass: 'process.env.EMAIL_PASS' 
+    user: 'ozleemguney925@gmail.com', 
+    pass: process.env.EMAIL_PASS 
   },
+  connectionTimeout: 20000, 
+  greetingTimeout: 20000,
+  socketTimeout: 20000,
   tls: {
     rejectUnauthorized: false
   }
@@ -18,19 +21,8 @@ const sendMail = async (to, subject, text) => {
     from: '"Klinik Yönetimi" <ozleemguney925@gmail.com>',
     to: to,
     subject: subject,
-    html: `
-      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; padding: 30px; border-radius: 16px;">
-        <h2 style="color: #10b981; text-align: center;">Randevium'a Hoş Geldiniz!</h2>
-        <p style="font-size: 16px; line-height: 1.6;">${text}</p>
-        <div style="text-align: center; margin-top: 25px;">
-          <p style="font-size: 14px; color: #64748b;">Artık tüm randevularınızı panel üzerinden takip edebilirsiniz.</p>
-        </div>
-        <hr style="border: 0; border-top: 1px solid #edf2f7; margin: 20px 0;">
-        <footer style="font-size: 12px; color: #94a3b8; text-align: center;">
-          Bu otomatik bir e-postadır, lütfen yanıtlamayınız.
-        </footer>
-      </div>
-    `
+    text: text, 
+    html: `<div style="font-family: sans-serif; padding: 20px;"><h2>Sisteme Hoş Geldiniz!</h2><p>${text}</p></div>`
   };
 
   return transporter.sendMail(mailOptions);
