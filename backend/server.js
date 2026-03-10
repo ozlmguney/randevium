@@ -70,29 +70,25 @@ app.post('/api/login', (req, res) => {
     return res.status(401).json({ message: "E-posta veya şifre hatalı!" });
 });
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', (req, res) => { 
     try {
         const userData = { ...req.body, id: Date.now().toString(), role: 'USER' };
         users.push(userData); 
-        console.log("Yeni kullanıcı eklendi:", userData.email);
+        console.log("Kullanıcı listeye eklendi (Hemen cevap dönülecek):", userData.email);
 
         if (userData.email) {
-            try {
-                await sendMail(
-                    userData.email, 
-                    "Hoş Geldiniz!", 
-                    `Sayın ${userData.name}, Randevium sistemine kaydınız başarıyla tamamlanmıştır.`
-                );
-                console.log("Kayıt maili başarıyla gönderildi.");
-            } catch (mailError) {
-                console.error("Mail gönderim hatası (Kayıt yapıldı):", mailError.message);
-            }
+            sendMail(userData.email, "Hoş Geldiniz!", `Sayın ${userData.name}, kaydınız tamamlandı.`)
+                .then(() => console.log("Mail arka planda başarıyla gönderildi."))
+                .catch(err => console.log("Mail arka planda hata verdi (Kullanıcı etkilenmedi):", err.message));
         }
 
-        return res.status(201).json({ message: "Kayıt başarılı ve mail gönderildi.", user: userData });
+        return res.status(201).json({ 
+            message: "Kayıt başarılı", 
+            user: { id: userData.id, email: userData.email } 
+        });
         
     } catch (error) {
-        console.error("Kayıt hatası:", error);
+        console.error("Kayıt ana hatası:", error);
         res.status(500).json({ message: "Sunucu hatası oluştu" });
     }
 });
