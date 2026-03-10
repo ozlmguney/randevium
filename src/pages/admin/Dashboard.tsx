@@ -217,7 +217,7 @@ const AdminDashboard = () => {
             appointment={{ ...selectedAppt, doctorName: getDoctorName(selectedAppt) }}
             onClose={() => setIsDetailOpen(false)}
             onUpdate={fetchData}
-            onOpenChat={() => alert("Admin chat özelliği yakında!")}
+            onOpenChat={() => alert("Admin mesaj kutusu yakında !")}
             onCancel={() => handleDelete(null, selectedAppt.id)}
           />
         )}
