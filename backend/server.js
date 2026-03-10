@@ -5,7 +5,7 @@ const app = express();
 const jwt = require('jsonwebtoken'); 
 
 const SECRET_KEY = process.env.JWT_SECRET || 'fallback_key_for_local';
-const PORT = process.env.PORT || 5001;
+const PORT =  5001;
 
 app.use(cors({ origin: "*" })); 
 app.use(express.json());
@@ -70,25 +70,29 @@ app.post('/api/login', (req, res) => {
     return res.status(401).json({ message: "E-posta veya şifre hatalı!" });
 });
 
-app.post('/api/register', (req, res) => { 
+app.post('/api/register', async (req, res) => {
     try {
         const userData = { ...req.body, id: Date.now().toString(), role: 'USER' };
         users.push(userData); 
-        console.log("Kullanıcı listeye eklendi (Hemen cevap dönülecek):", userData.email);
+        console.log("Yeni kullanıcı eklendi:", userData.email);
 
         if (userData.email) {
-            sendMail(userData.email, "Hoş Geldiniz!", `Sayın ${userData.name}, kaydınız tamamlandı.`)
-                .then(() => console.log("Mail arka planda başarıyla gönderildi."))
-                .catch(err => console.log("Mail arka planda hata verdi (Kullanıcı etkilenmedi):", err.message));
+            try {
+                await sendMail(
+                    userData.email, 
+                    "Hoş Geldiniz!", 
+                    `Sayın ${userData.name}, Randevium sistemine kaydınız başarıyla tamamlanmıştır.`
+                );
+                console.log("Kayıt maili başarıyla gönderildi.");
+            } catch (mailError) {
+                console.error("Mail gönderim hatası (Kayıt yapıldı):", mailError.message);
+            }
         }
 
-        return res.status(201).json({ 
-            message: "Kayıt başarılı", 
-            user: { id: userData.id, email: userData.email } 
-        });
+        return res.status(201).json({ message: "Kayıt başarılı ve mail gönderildi.", user: userData });
         
     } catch (error) {
-        console.error("Kayıt ana hatası:", error);
+        console.error("Kayıt hatası:", error);
         res.status(500).json({ message: "Sunucu hatası oluştu" });
     }
 });
@@ -145,5 +149,5 @@ app.delete('/api/appointments/:id', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server ${PORT} üzerinde çalışıyor`);
+    console.log(`🚀 Server http://localhost:${PORT} üzerinde çalışıyor`);
 });
